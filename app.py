@@ -1,9 +1,10 @@
 # coding : utf-8
-import codecs
+from urlparse import urlparse
 
 from flask import Flask, request, make_response
 import mistune
 import custom
+from pymongo import MongoClient
 
 app = Flask(__name__, static_folder='public')
 
@@ -33,6 +34,11 @@ def http(path):
     html = ''
     renderer = custom.HighlightRenderer()
     md = mistune.Markdown(renderer=renderer)
+
+    obj = urlparse(request.url)
+    client = MongoClient('localhost', 27017)
+    db = client.db
+    
 
     with codecs.open('fixtures/sample.md', 'r', 'utf-8') as fr:
         md_text = fr.read()
